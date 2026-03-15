@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Pawtect: Creating Safer Communities for Humans and Stray Paws</title>
+
+<!-- Online version: uses Google Fonts for Merriweather, Poppins, and Caveat -->
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Poppins:wght@300;400;500&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#f4f6fb;font-family:'Poppins', sans-serif;line-height:1.6;color:#222;}
+
+/* HERO SECTION (NGO STYLE) */
+.hero{background:url('images/WEBSITEHEADER.png') center/cover no-repeat;height:350px;display:flex;align-items:center;justify-content:center;text-align:center;color:white;position:relative;}
+.hero::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,0.45);} 
+.hero-content{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);max-width:700px;padding:20px;text-align:center;}
+.hero h2{font-family:'Merriweather', serif;font-size:32px;margin-bottom:10px;}
+.hero p{font-size:16px;}
+.hero button{margin-top:15px;background:#f2b705;border:none;padding:12px 20px;border-radius:8px;color:white;font-weight:500;cursor:pointer;}
+.hero button:hover{background:#1b5e20;}
+
+/* HEADER */
+.header{background:linear-gradient(90deg,#2e7d32,#f2b705);color:white;display:flex;justify-content:space-between;align-items:center;padding:15px 40px;box-shadow:0 4px 15px rgba(0,0,0,0.15);position:sticky;top:0;z-index:1000;}
+.title{font-family:'Merriweather', serif;font-size:20px;color:white;font-weight:bold;}
+.signin{font-family:'Times New Roman';font-size:15px;color:white;display:flex;align-items:center;gap:10px;cursor:pointer;}
+.signin img{width:40px;height:40px;border-radius:50%;border:2px solid white;}
+
+/* TABS */
+.tabs{display:flex;background:#2e7d32;box-shadow:0 4px 10px rgba(0,0,0,0.1);}
+.tabs button{flex:1;background:#2e7d32;color:white;font-family:'Times New Roman';font-size:15px;border:none;padding:14px;cursor:pointer;transition:0.3s;}
+.tabs button:hover{background:#f2b705;}
+.tabs button.active{background:white;color:#2e7d32;font-weight:bold;}
+
+.content{padding:40px;display:none;max-width:1100px;margin:auto;}
+
+/* GRID LAYOUT FOR CARDS */
+#news, #donation, #activities, #adoption, #campaigns{
+display:none;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:25px;
+}
+
+#news.activeContent, #donation.activeContent, #activities.activeContent, #adoption.activeContent, #campaigns.activeContent{
+display:grid;
+}
+
+#news hr{display:none;}
+.activeContent{display:block;}
+hr{margin:30px 0;border:0;height:1px;background:#ddd;}
+
+.news-item{display:flex;flex-direction:column;gap:12px;background:white;padding:20px;border-radius:15px;box-shadow:0 4px 15px rgba(0,0,0,0.05);}
+.news-item img{width:100%;height:180px;object-fit:cover;border-radius:10px;}
+.news-title{font-family:'Merriweather', serif;font-size:20px;color:black;margin-bottom:5px;}
+.news-desc{font-family:'Poppins';font-size:15px;color:black;}
+
+.project{background:white;padding:25px;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,0.08);margin-bottom:30px;transition:0.3s;border:1px solid #eee;}
+.project:hover{transform:translateY(-5px);}
+.project-title{font-family:'Merriweather', serif;font-size:20px;color:black;margin-bottom:10px;}
+.project-desc{font-family:'Poppins';font-size:15px;color:black;margin-bottom:10px;}
+.project img{width:100%;max-width:400px;height:220px;object-fit:cover;border-radius:15px;margin-bottom:15px;}
+
+button.action{background:#2e7d32;color:white;border:none;padding:10px 16px;margin:5px 5px 5px 0;cursor:pointer;border-radius:8px;transition:0.3s;}
+button.action:hover{background:#2e7d32;}
+
+/* ABOUT */
+.about-title{font-family:'Merriweather', serif;font-size:25px;color:#2e7d32;margin-bottom:10px;}
+.about-desc{font-family:'Poppins';font-size:15px;color:black;margin-bottom:30px;}
+
+.founders-container{display:flex;gap:40px;}
+.founder-column{flex:1;}
+.founder-card{background:white;padding:20px;border-radius:15px;box-shadow:0 4px 15px rgba(0,0,0,0.05);margin-bottom:20px;}
+.founder-name{font-family:'Caveat', cursive;font-size:25px;color:black;font-weight:bold;margin-bottom:5px;}
+.founder-desc{font-family:'Poppins';font-size:15px;color:black;}
+
+/* MODALS */
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;}
+.modal-content{background:white;padding:25px;width:320px;border-radius:15px;box-shadow:0 8px 25px rgba(0,0,0,0.2);}
+.modal-content input{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #ccc;}
+
+/* PAW PRINT HOVER EFFECTS */
+.project:hover::after,
+.news-item:hover::after,
+.founder-card:hover::after{
+content:"🐾";
+position:absolute;
+font-size:22px;
+animation:pawPop 0.4s ease;
+right:15px;
+top:15px;
+}
+
+.project,
+.news-item,
+.founder-card{
+position:relative;
+transition:transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.project:hover,
+.news-item:hover,
+.founder-card:hover{
+box-shadow:0 12px 35px rgba(0,0,0,0.15);
+transform:translateY(-6px) scale(1.01);
+}
+
+button.action:hover{
+transform:translateY(-2px);
+}
+
+@keyframes pawPop{
+0%{transform:scale(0);opacity:0}
+60%{transform:scale(1.3);opacity:1}
+100%{transform:scale(1);opacity:1}
+}
+
+</style>
+</head>
+<body>
+
+<div class="header">
+<div class="title">Project Pawtect: Creating Safer Communities for Humans and Stray Paws</div>
+<div class="signin" onclick="openModal('signinModal')">
+<span>Sign in here</span>
+<img src="images/Default PFP.jpg">
+</div>
+</div>
+
+<div class="hero">
+
+</div>
+
+<div class="tabs">
+<button class="tab active" onclick="showTab('news',this)">News</button>
+<button class="tab" onclick="showTab('donation',this)">Projects and Donation Drives</button>
+<button class="tab" onclick="showTab('activities',this)">Activities</button>
+<button class="tab" onclick="showTab('adoption',this)">Adoption</button>
+<button class="tab" onclick="showTab('campaigns',this)">Campaigns</button>
+<button class="tab" onclick="showTab('about',this)">About Us</button>
+</div>
+
+<!-- NEWS -->
+<div id="news" class="content activeContent">
+
+<div class="news-item">
+<img src="images/news-image-1.jpg">
+<div>
+<div class="news-title">DOH urges caution vs. rabies despite fewer cases in early 2026</div>
+<div class="news-desc"><b>By Jiselle Anne C. Casucian, GMA Integrated News, March 7, 2026</b><br>The Department of Health (DOH) on Saturday called for vigilance against rabies even though cases have dropped 65% in the first two months of 2026 compared to the same period last year.The agency reported Saturday a total of 17 rabies cases from January 4 to February 21, significantly less than the 49 cases during the same monitoring period in 2025.New cases involved roughly the same number of pets and stray animals, with 13 cases or 76% coming from unvaccinated animals.</div>
+</div></div><hr>
+
+<div class="news-item">
+<img src="images/news-image-2.png">
+<div>
+<div class="news-title">Dubai launches AI-powered ‘Ehsan Stations’ to feed stray animals across emirate</div>
+<div class="news-desc"><b>By Leana Bernardo, The Filipino Times, March 9, 2026</b><br>Dubai Municipality has unveiled the ‘Ehsan Stations’, the first initiative of its kind in the region, designed to feed stray animals using AI-powered smart devices installed across the emirate. The project reflects Dubai Municipality’s efforts to promote compassion, advance animal welfare, and support environmental sustainability while maintaining the city’s urban landscape.Under the initiative, 12 smart devices will be deployed across key locations, including ten units in public parks and two within facilities operated by Dubai Holding. The stations combine advanced technology with strategic partnerships to manage stray animal populations responsibly, while reducing random feeding practices that can affect public spaces and city aesthetics.</div>
+</div></div><hr>
+
+<div class="news-item">
+<img src="images/news-image-3.jpg">
+<div>
+<div class="news-title">Fur parents, bid goodbye to animal bite worries with Maxicare Prima Animal Bite Care</div>
+<div class="news-desc"><b>By Philstar, March 11, 2026</b><br>For many Filipino families, a simple animal bite can quickly turn into a stressful and costly medical emergency. In the worst cases, it can even lead to death. Recognizing this everyday risk, Maxicare, the country’s leading HMO, has launched the PRIMA Animal Bite Care e-voucher, the country’s first comprehensive animal bite care with built-in insurance. Recent data from the Department of Health (DOH) show rabies remains a significant concern in the Philippines, with 1,750 fatalities reported between 2020 and 2024. This is particularly timely as the DOH calendar declared March as Rabies Awareness Month.</div>
+</div></div><hr>
+
+</div>
+
+<!-- PROJECTS AND DONATION DRIVES -->
+<div id="donation" class="content">
+
+<div class="project">
+<img src="images/project-donation-1.jpg">
+<div class="project-title">Food / Donation Drives</div>
+<div class="project-desc">This initiative provides food and essential supplies for stray dogs and cats across different communities. Donations help purchase pet food, clean water containers, and feeding materials. Volunteers distribute meals to animals who struggle to find food daily. These feeding drives ensure that strays receive proper nutrition and care. Every contribution directly helps reduce hunger among animals living on the streets.</div>
+<button class="action" onclick="openModal('paymentModal')">Donate Food</button>
+<button class="action" onclick="openModal('paymentModal')">Donate Money</button>
+</div>
+
+<div class="project">
+<img src="images/project-donation-2.png">
+<div class="project-title">Feeding Stations with Shelters</div>
+<div class="project-desc">This project builds safe feeding stations that also function as small shelters for stray animals. Donations fund materials such as roofing, wood panels, and bedding. These stations protect animals from rain, heat, and other harsh conditions. Community volunteers help maintain the stations and refill food and water daily. Supporting this project creates safer spaces for strays to rest and eat.</div>
+<button class="action" onclick="openModal('paymentModal')">Donate</button>
+</div>
+
+<div class="project">
+<img src="images/project-donation-3.jpg">
+<div class="project-title">Clean Up Drives</div>
+<div class="project-desc">The Clean Up Drives focus on improving the streets of Sampaloc, Manila by cleaning stray animal waste in public areas. Volunteers work together to sanitize sidewalks, parks, and community spaces. The activity promotes a cleaner and healthier environment for both residents and animals. Educational discussions about responsible pet ownership are also conducted. These efforts help build a safer and more respectful community.</div>
+<button class="action" onclick="openModal('signupModal')">Sign Up</button>
+</div>
+
+<div class="project">
+<img src="images/project-donation-3.jpg">
+<div class="project-title">Neuter / Spay Cats</div>
+<div class="project-desc">This project supports humane population control through spay and neuter programs for stray cats. Veterinarians partner with volunteers to conduct safe procedures and health checks. The program prevents uncontrolled breeding and reduces the number of abandoned kittens. Communities benefit from fewer strays and healthier animal populations. Volunteers can assist with transport, coordination, and recovery care.</div>
+<button class="action" onclick="openModal('signupModal')">Sign Up</button>
+</div>
+
+</div>
+
+<!-- ACTIVITIES -->
+<div id="activities" class="content">
+
+<div class="project">
+<img src="images/activities-1.jpg">
+<div class="project-title">Fun Runs with Rescue Dogs</div>
+<div class="project-desc">Community members participate in a friendly fun run while accompanied by rescued shelter dogs. The event promotes exercise, compassion, and awareness for animal welfare. Registration fees help support shelter operations and rescue missions. Families, students, and pet lovers are encouraged to join the activity. The event creates a joyful experience for both humans and animals.</div>
+<button class="action" onclick="openModal('signupModal')">Sign Up</button>
+</div>
+
+<div class="project">
+<img src="images/activities-2.jpg">
+<div class="project-title">Walking Dogs</div>
+<div class="project-desc">Volunteers help walk shelter dogs who need exercise and social interaction. Regular walks improve the dogs' physical health and emotional well-being. It also helps them become more comfortable around people. Volunteers spend meaningful time bonding with animals waiting for adoption. The activity is simple yet greatly improves a dog's quality of life.</div>
+<button class="action" onclick="openModal('signupModal')">Sign Up</button>
+</div>
+
+<div class="project">
+<img src="images/activities-3.jpg">
+<div class="project-title">Reading to Dogs</div>
+<div class="project-desc">Participants read calm and friendly stories to rescued dogs in shelters. This helps shy or traumatized animals become comfortable around human voices. The peaceful environment reduces anxiety and builds trust. Volunteers enjoy a relaxing activity while helping animals heal emotionally. Over time, the dogs become more confident and adoptable.</div>
+<button class="action" onclick="openModal('signupModal')">Sign Up</button>
+</div>
+
+<div class="project">
+<img src="images/activities-4.jpg">
+<div class="project-title">Angel Tree</div>
+<div class="project-desc">During Christmas, supporters pick a card from the Angel Tree containing the name of a shelter dog or cat. Each card lists a small wish such as toys, treats, blankets, or food. Donors then provide gifts specifically for that animal. The initiative ensures that every rescued pet receives something special for the holidays. It spreads joy and reminds animals they are loved.</div>
+<button class="action" onclick="openModal('signupModal')">Sign Up</button>
+</div>
+
+</div>
+
+<!-- ADOPTION -->
+<div id="adoption" class="content">
+
+<div class="project">
+<div class="project-title">Adoption Processes</div>
+<div class="project-desc">Learn about the step‑by‑step process of adopting rescued dogs and cats from our partner shelters. The process includes meeting the animal, completing a short screening, and preparing your home for a new pet. Our team ensures every adoption is responsible and safe. Families receive guidance on pet care and adjustment. This program helps animals find loving and permanent homes.</div>
+<button class="action">View More</button>
+</div>
+
+<div class="project">
+<div class="project-title">Foster a Rescue</div>
+<div class="project-desc">Fostering allows volunteers to temporarily care for rescued animals until they are adopted. Foster families provide food, shelter, and affection while the shelter continues adoption efforts. This support frees space in shelters for more rescues. Animals in foster homes often recover faster and become more social. The program plays an important role in saving more lives.</div>
+<button class="action">View More</button>
+</div>
+
+</div>
+
+<!-- CAMPAIGNS -->
+<div id="campaigns" class="content">
+
+<div class="project">
+<div class="project-title">Awareness Campaign</div>
+<div class="project-desc">This campaign spreads awareness about the challenges faced by stray animals in communities. Educational posts, events, and school visits inform the public about humane animal care. Volunteers help distribute information materials and host small talks. The campaign encourages compassion and community participation. Raising awareness is the first step toward meaningful change.</div>
+<button class="action">View More</button>
+</div>
+
+<div class="project">
+<div class="project-title">Responsible Pet Ownership Campaign</div>
+<div class="project-desc">This campaign educates pet owners about proper care, vaccination, and preventing abandonment. Workshops and social media materials teach families how to responsibly raise pets. The campaign also promotes adoption and humane population control. Communities benefit when animals are treated with care and responsibility. Education helps prevent future stray populations.</div>
+<button class="action">View More</button>
+</div>
+
+</div>
+
+<!-- ABOUT -->
+<div id="about" class="content">
+<div style="display:flex;align-items:flex-start;gap:30px;flex-wrap:wrap;margin-bottom:30px;">
+
+<img src="images/Poster.jpg" style="width:260px;height:350px;object-fit:cover;border-radius:15px;box-shadow:0 6px 20px rgba(0,0,0,0.15);">
+
+<div style="flex:1;min-width:260px;">
+<div class="about-title">Project Pawtect: Creating Safer Communities for Humans and Stray Paws</div>
+<div class="about-desc">The country faces issues with the growing number of stray animals roaming the streets. It is estimated that around 100,000 - 500,000 stray cats and dogs are added yearly. This leads to increasing animal welfare crises and public health risks. Through the project "The PAW PATROL," awareness and action are promoted. Volunteers collaborate with shelters to rescue animals, provide healthcare, build feeding stations, and promote responsible pet ownership through social media campaigns.</div>
+</div>
+
+</div>
+
+<h3>Learn More About the Founders</h3>
+
+<div class="founders-container">
+
+<div class="founder-column">
+
+<div class="founder-card"><div class="founder-name">Sabina Barcarse</div><div class="founder-desc">Sabina is passionate about animal rescue and advocacy. She coordinates donation drives and outreach programs. Her leadership ensures smooth collaboration with shelters. She believes compassion creates lasting change. Sabina inspires young volunteers to take action.</div></div>
+
+<div class="founder-card"><div class="founder-name">Jamyrr Calayag</div><div class="founder-desc">Jamyrr focuses on community awareness campaigns. She designs educational materials about responsible pet ownership. Her creativity strengthens social media engagement. She actively participates in rescue missions. Jamyrr is dedicated to protecting stray animals.</div></div>
+
+<div class="founder-card"><div class="founder-name">Marcus Canchola</div><div class="founder-desc">Marcus manages logistics and operations. He coordinates with international welfare organizations. His strategic planning improves project efficiency. He advocates humane population control programs. Marcus works tirelessly for sustainable solutions.</div></div>
+
+<div class="founder-card"><div class="founder-name">Janella Ong</div><div class="founder-desc">Janella leads volunteer coordination efforts. She ensures every activity runs smoothly. Her empathy drives meaningful community impact. She writes informative articles for awareness. Janella believes education empowers change.</div></div>
+
+</div>
+
+<div class="founder-column">
+
+<div class="founder-card"><div class="founder-name">Joannah Ramos</div><div class="founder-desc">Joannah oversees adoption programs. She carefully matches animals with loving families. Her dedication ensures safe rehoming processes. She provides counseling for new pet owners. Joannah values responsible and compassionate care.</div></div>
+
+<div class="founder-card"><div class="founder-name">Renz Sy Su</div><div class="founder-desc">Renz handles financial planning and fundraising strategies. He ensures transparency in donation allocation. His efforts sustain long-term projects. He builds partnerships with sponsors. Renz is committed to sustainable animal welfare solutions.</div></div>
+
+<div class="founder-card"><div class="founder-name">Rafael Tano</div><div class="founder-desc">Rafael leads global outreach initiatives. He writes articles promoting adoption campaigns. His communication skills strengthen partnerships. He encourages youth participation in volunteering. Rafael believes every animal deserves protection and purpose.</div></div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- MODALS -->
+<div id="signinModal" class="modal"><div class="modal-content"><h3>Sign In</h3><input placeholder="Email"><input type="password" placeholder="Password"><button class="action" onclick="closeModal('signinModal')">Sign In</button></div></div>
+
+<div id="paymentModal" class="modal"><div class="modal-content"><h3>Mock Payment</h3><input placeholder="Card Number"><input placeholder="Expiry Date"><input placeholder="CVV"><button class="action" onclick="alert('Payment Successful!');closeModal('paymentModal')">Pay</button></div></div>
+
+<div id="signupModal" class="modal"><div class="modal-content"><h3>Volunteer Sign Up</h3><input placeholder="Full Name"><input placeholder="Email"><button class="action" onclick="alert('Successfully Registered!');closeModal('signupModal')">Submit</button></div></div>
+
+<script>
+function showTab(id,btn){document.querySelectorAll('.content').forEach(c=>c.classList.remove('activeContent'));document.getElementById(id).classList.add('activeContent');document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');}
+function openModal(id){document.getElementById(id).style.display='flex';}
+function closeModal(id){document.getElementById(id).style.display='none';}
+</script>
+
+<footer style="background:#2e7d32;;color:white;padding:40px 20px;margin-top:60px;">
+<div style="max-width:1100px;margin:auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:30px;">
+<div>
+<h3 style="font-family:Merriweather">Project Pawtect</h3>
+<p style="max-width:300px;font-size:14px">A youth-led initiative dedicated to protecting stray animals through rescue programs, donation drives, and volunteer partnerships.</p>
+</div>
+<div>
+<h4>Explore</h4>
+<p>News</p>
+<p>Donation Drives</p>
+<p>Volunteer Activities</p>
+</div>
+<div>
+<h4>Contact</h4>
+<p>Email: pawsupport@pawtection.org</p>
+<p>Phone: +63 703 914 9302</p>
+<p>Philippines</p>
+</div>
+</div>
+<p style="text-align:center;margin-top:30px;font-size:13px;opacity:0.8">© 2026 Project Pawtect: Creating Safer Communities for Humans and Stray Paws</p>
+<p style="text-align:center;margin-top:10px;font-size:14px;"><b>Disclaimer: This is a student's sample project</b></p>
+</footer>
+
+</body>
+</html>
